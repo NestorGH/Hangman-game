@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/ui/colorcitos.dart';
 import 'package:hangman/ui/widget/figure_image.dart';
+import 'package:hangman/ui/widget/letter.dart';
+import 'package:hangman/utils/game.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +28,9 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
+  //Elegir la palabra
+  String word = "Flutter";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,10 +48,27 @@ class _HomeAppState extends State<HomeApp> {
           Center(
             child: Stack(
               children: [
-                //La figurita del widget
-                figureImage(true, "assets/hang.png")
+                //La figuritas cambiaran en base al numero de intentos
+                figureImage(Game.tries >= 0, "assets/hang.png"),
+                figureImage(Game.tries >= 1, "assets/head.png"),
+                figureImage(Game.tries >= 2, "assets/body.png"),
+                figureImage(Game.tries >= 3, "assets/ra.png"),
+                figureImage(Game.tries >= 4, "assets/la.png"),
+                figureImage(Game.tries >= 5, "assets/rl.png"),
+                figureImage(Game.tries >= 6, "assets/ll.png"),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          //------------Widget para crear la palabra oculta--------------
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: word
+                .split("")
+                .map((e) => letter(e.toUpperCase(), true))
+                .toList(),
           )
         ],
       ),
