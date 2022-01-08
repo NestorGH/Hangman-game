@@ -137,7 +137,7 @@ class _HomeAppState extends State<HomeApp> {
                             //SI GANA
                             if (word.length == Game.selectedChar.length &&
                                 Game.triesWin != 0) {
-                              print("Ganaste");
+                              //print("Ganaste");
                               Game.selectedChar.clear();
                               Game.tries = 0;
                               Game.triesWin = 0;
