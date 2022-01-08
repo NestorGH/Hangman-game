@@ -29,7 +29,9 @@ class HomeApp extends StatefulWidget {
 
 class _HomeAppState extends State<HomeApp> {
   //Elegir la palabra
-  String word = "Flutter".toUpperCase();
+  String word = "vaca".toUpperCase();
+  bool victoria = false;
+
   List<String> alphabet = [
     "A",
     "B",
@@ -87,19 +89,18 @@ class _HomeAppState extends State<HomeApp> {
               ],
             ),
           ),
-          /*const SizedBox(
-            height: 20,
-          ),*/
+
           //------------Widget para crear la palabra oculta--------------
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: word
-                .split("")
-                .map((e) => letter(e.toUpperCase(),
-                    !Game.selectedChar.contains(e.toUpperCase())))
-                .toList(),
+            children:
+                word //Dividimos cada letra de la cadena de texto ingresada en la palabra que se va a adivinar y lo pasamos a una lista
+                    .split("")
+                    .map((e) => letter(e.toUpperCase(),
+                        !Game.selectedChar.contains(e.toUpperCase())))
+                    .toList(),
           ),
-          //---------Widget para el teclado-----------------
+          //-------------Widget para el teclado-----------------
           SizedBox(
             width: double.infinity,
             height: 250.0,
@@ -110,18 +111,36 @@ class _HomeAppState extends State<HomeApp> {
               padding: const EdgeInsets.all(8.0),
               children: alphabet.map((e) {
                 return RawMaterialButton(
-                  //La logica del juego al dar en un boton
+                  //--------------La logica del juego al dar en un boton----------------
                   onPressed: Game.selectedChar.contains(e)
                       ? null //Verificamos que no se halla seleccionado ningun boton
                       : () {
                           setState(() {
+                            //Agregamos la letra a la lista de palabras seleccionadas
                             Game.selectedChar.add(e);
-                            if (!word.split('').contains(e.toUpperCase())) {  //Si no se elige la letra de la palabra se suma un intento
+
+                            //Si no se elige la letra de la palabra se suma un intento
+                            if (!word.split('').contains(e.toUpperCase())) {
                               Game.tries++;
-                              /*
-                              if (Game.tries == word.lengtht){
-                                //Mostrar mensaje y reiniciar de nuevo
-                              }*/
+
+                              //Si se le acaban los intentos reinicia el juego
+                              if (Game.tries == 7) {
+                                Game.tries = 0;
+                                Game.selectedChar
+                                    .clear(); //Limpiamos la lista de palabras seleccionadas pasando a ser cero
+                              }
+                            } else {
+                              Game.triesWin++;
+                              //word.length == Game.selectedChar.length && Game.triesWin != 0
+                            }
+
+                            //SI GANA
+                            if (word.length == Game.selectedChar.length &&
+                                Game.triesWin != 0) {
+                              print("Ganaste");
+                              Game.selectedChar.clear();
+                              Game.tries = 0;
+                              Game.triesWin = 0;
                             }
                           });
                         },
@@ -136,8 +155,9 @@ class _HomeAppState extends State<HomeApp> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  fillColor: Game.selectedChar.contains(e)
-                      ? Colors.black87
+                  fillColor: Game.selectedChar.contains(
+                          e) //Cambiamos el color de la palabra seleccionada
+                      ? Colors.blue
                       : AppColor.primaryColorDark,
                 );
               }).toList(),
